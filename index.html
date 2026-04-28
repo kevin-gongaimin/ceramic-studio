@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泥与火 — 手工陶瓷绘画工作室</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#0a0a0a;color:#E8D5B7;font-family:'Noto Sans SC',sans-serif;overflow-x:hidden;cursor:none}
+
+/* Custom cursor */
+.cursor{position:fixed;width:24px;height:24px;border:1.5px solid #C4A882;border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease,opacity 0.3s;mix-blend-mode:difference}
+.cursor-dot{position:fixed;width:5px;height:5px;background:#D4956B;border-radius:50%;pointer-events:none;z-index:9999}
+.cursor.hover{transform:scale(2);opacity:0.6}
+
+/* Trail canvas */
+#trail-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#3a2a1a;border-radius:3px}
+
+/* Hero */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#particle-canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-tagline{font-size:clamp(12px,1.5vw,16px);letter-spacing:8px;color:#8B6F4E;text-transform:uppercase;margin-bottom:24px;opacity:0}
+.hero-title{font-family:'Noto Serif SC',serif;font-size:clamp(48px,8vw,120px);font-weight:700;line-height:1.1;margin-bottom:16px}
+.hero-title .char{display:inline-block;opacity:0;transform:translateY(80px) rotateX(90deg);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
+.hero-sub{font-size:clamp(14px,2vw,20px);font-weight:300;color:#A0785A;letter-spacing:4px;opacity:0}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeInUp 1s 2.5s forwards}
+.hero-scroll span{font-size:11px;letter-spacing:3px;color:#8B6F4E}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,#8B6F4E,transparent);animation:scrollPulse 2s infinite}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(0.5)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes fadeInUp{to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* Blob divider */
+.blob-divider{position:relative;height:200px;overflow:hidden}
+.blob-divider svg{position:absolute;width:100%;height:100%}
+
+/* Section base */
+section{position:relative;padding:120px 0}
+.container{max-width:1100px;margin:0 auto;padding:0 40px}
+.section-label{font-size:11px;letter-spacing:6px;color:#8B6F4E;text-transform:uppercase;margin-bottom:16px}
+.section-title{font-family:'Noto Serif SC',serif;font-size:clamp(28px,4vw,48px);font-weight:600;margin-bottom:48px;line-height:1.3}
+
+/* About / Philosophy */
+.about{background:#0a0a0a}
+.philosophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.philosophy-text p{font-size:16px;line-height:2;color:#B8A080;margin-bottom:20px;font-weight:300}
+.philosophy-visual{position:relative;height:400px;display:flex;align-items:center;justify-content:center}
+#blob-container{width:100%;height:100%}
+
+/* Courses */
+.courses{background:#0e0c08}
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.course-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid rgba(196,168,130,0.1);border-radius:20px;padding:36px 28px;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;opacity:0;transform:translateY(40px)}
+.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#C4A882,transparent);opacity:0;transition:opacity 0.5s}
+.course-card:hover{transform:translateY(-8px);border-color:rgba(196,168,130,0.3);background:rgba(255,255,255,0.06)}
+.course-card:hover::before{opacity:1}
+.course-icon{font-size:36px;margin-bottom:20px;display:block}
+.course-name{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:12px}
+.course-desc{font-size:13px;color:#8B6F4E;line-height:1.8;margin-bottom:20px}
+.course-meta{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid rgba(196,168,130,0.1)}
+.course-meta span{font-size:12px;color:#A0785A}
+.course-price{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;color:#D4956B}
+
+/* Stats */
+.stats-section{padding:80px 0;background:#080604}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(16px);border:1px solid rgba(196,168,130,0.08);border-radius:16px;padding:32px 24px;text-align:center}
+.stat-number{font-family:'Noto Serif SC',serif;font-size:42px;font-weight:700;color:#D4956B;margin-bottom:8px}
+.stat-label{font-size:13px;color:#8B6F4E;letter-spacing:2px}
+
+/* Gallery parallax */
+.gallery{padding:120px 0;overflow:hidden;background:#0a0a0a}
+.gallery-track{display:flex;gap:24px;padding:0 40px}
+.gallery-item{flex:0 0 320px;height:420px;border-radius:16px;overflow:hidden;position:relative}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s cubic-bezier(0.16,1,0.3,1)}
+.gallery-item:hover img{transform:scale(1.08)}
+.gallery-overlay{position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);opacity:0;transform:translateY(10px);transition:all 0.4s}
+.gallery-item:hover .gallery-overlay{opacity:1;transform:translateY(0)}
+.gallery-overlay span{font-size:14px;letter-spacing:2px}
+
+/* Process / Timeline */
+.process{background:#0e0c08;position:relative}
+.timeline{position:relative;max-width:700px;margin:0 auto}
+.timeline::before{content:'';position:absolute;left:50%;width:1px;height:100%;background:linear-gradient(to bottom,transparent,#3a2a1a,#3a2a1a,transparent);transform:translateX(-50%)}
+.timeline-item{position:relative;padding:0 0 60px;display:flex;align-items:flex-start;opacity:0;transform:translateY(30px)}
+.timeline-item:nth-child(odd){flex-direction:row-reverse;text-align:right}
+.timeline-item:nth-child(odd) .timeline-content{padding-right:60px;padding-left:0}
+.timeline-content{flex:1;padding-left:60px}
+.timeline-dot{position:absolute;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;border:2px solid #C4A882;background:#0e0c08;z-index:2}
+.timeline-step{font-size:11px;letter-spacing:4px;color:#8B6F4E;margin-bottom:8px}
+.timeline-title{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:8px}
+.timeline-desc{font-size:14px;color:#8B6F4E;line-height:1.7}
+
+/* Testimonials */
+.testimonials{background:#0a0a0a;padding:120px 0}
+.testimonial-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+.testimonial-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);border:1px solid rgba(196,168,130,0.08);border-radius:20px;padding:36px;position:relative}
+.testimonial-card::before{content:'\201C';font-family:'Noto Serif SC',serif;font-size:80px;color:rgba(196,168,130,0.1);position:absolute;top:10px;left:24px;line-height:1}
+.testimonial-text{font-size:15px;line-height:1.9;color:#B8A080;margin-bottom:20px;position:relative;z-index:1}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.testimonial-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#8B6F4E);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500}
+.testimonial-name{font-size:14px;font-weight:500}
+.testimonial-role{font-size:12px;color:#8B6F4E}
+
+/* CTA */
+.cta{padding:160px 0;text-align:center;position:relative;overflow:hidden}
+.cta-bg{position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(196,168,130,0.08),transparent 70%)}
+.cta .section-title{margin-bottom:24px}
+.cta p{font-size:16px;color:#8B6F4E;margin-bottom:48px;font-weight:300}
+.cta-btn{display:inline-block;padding:18px 56px;border:1.5px solid #C4A882;border-radius:60px;font-family:'Noto Serif SC',serif;font-size:16px;color:#E8D5B7;text-decoration:none;letter-spacing:4px;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;background:transparent;cursor:none}
+.cta-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(196,168,130,0.15);border-radius:50%;transform:translate(-50%,-50%);transition:all 0.6s}
+.cta-btn:hover{border-color:#D4956B;color:#fff;transform:scale(1.05)}
+.cta-btn:hover::before{width:300px;height:300px}
+
+/* Footer */
+footer{padding:40px;text-align:center;border-top:1px solid rgba(196,168,130,0.08)}
+footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
+
+/* Visible class for scroll animations */
+.visible{opacity:1 !important;transform:translateY(0) !important}
+.char.visible{opacity:1 !important;transform:translateY(0) rotateX(0deg) !important}
+
+/* Responsive */
+@media(max-width:768px){
+  .philosophy-grid{grid-template-columns:1fr}
+  .course-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .testimonial-grid{grid-template-columns:1fr}
+  .timeline-item,.timeline-item:nth-child(odd){flex-direction:column;text-align:left}
+  .timeline-content,.timeline-item:nth-child(odd) .timeline-content{padding-left:40px;padding-right:0}
+  .timeline::before{left:6px}
+  .timeline-dot{left:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- Cursor Trail Canvas -->
+<canvas id="trail-canvas"></canvas>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-tagline" id="hero-tagline">Handmade Ceramic Art Studio</div>
+    <h1 class="hero-title" id="hero-title">
+      <span class="char">泥</span><span class="char">与</span><span class="char">火</span>
+    </h1>
+    <p class="hero-sub" id="hero-sub">在指尖与釉色之间 · 找到属于你的宁静</p>
+  </div>
+  <div class="hero-scroll">
+    <span>向下探索</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ==================== BLOB DIVIDER ==================== -->
+<div class="blob-divider">
+  <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+    <path id="divider-blob" fill="#0e0c08"/>
+  </svg>
+</div>
+
+<!-- ==================== PHILOSOPHY ==================== -->
+<section class="about">
+  <div class="container">
+    <div class="philosophy-grid">
+      <div class="philosophy-text">
+        <div class="section-label">我们的理念</div>
+        <div class="section-title">每一件作品<br>都是一次呼吸</div>
+        <p>在这个被屏幕包围的时代，我们相信双手的力量。当你触摸到柔软的陶土，感受它在指尖慢慢成形，那一刻，时间放慢了脚步。</p>
+        <p>陶瓷绘画不只是一门技术，它是一种冥想，一种与自己对话的方式。每一笔釉色，都是你内心世界的投射。</p>
+      </div>
+      <div class="philosophy-visual">
+        <svg id="blob-container" viewBox="0 0 400 400">
+          <defs>
+            <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#C4A882"/>
+              <stop offset="50%" style="stop-color:#D4956B"/>
+              <stop offset="100%" style="stop-color:#8B6F4E"/>
+            </linearGradient>
+            <linearGradient id="blobGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#A0785A;stop-opacity:0.4"/>
+              <stop offset="100%" style="stop-color:#D4956B;stop-opacity:0.1"/>
+            </linearGradient>
+          </defs>
+          <path id="blob1" fill="url(#blobGrad)" opacity="0.7"/>
+          <path id="blob2" fill="url(#blobGrad2)" opacity="0.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== COURSES ==================== -->
+<section class="courses">
+  <div class="container">
+    <div class="section-label">课程体系</div>
+    <div class="section-title">从零开始的陶瓷之旅</div>
+    <div class="course-grid">
+      <div class="course-card">
+        <span class="course-icon">🏺</span>
+        <div class="course-name">入门体验课</div>
+        <div class="course-desc">零基础友好。学习拉坯基础，完成你人生中第一件陶瓷作品。包含釉料基础知识和简单绘画技法。</div>
+        <div class="course-meta">
+          <span>3小时 · 单次</span>
+          <span class="course-price">$89</span>
+        </div>
+      </div>
+      <div class="course-card">
+        <span class="course-icon">🎨</span>
+        <div class="course-name">釉下彩绘精修</div>
+        <div class="course-desc">深入学习青花、釉下五彩等传统技法。掌握毛笔运用、构图设计和色彩叠加，创作完整的绘画作品。</div>
+        <div class="course-meta">
+          <span>12节 · 每节3小时</span>
+          <span class="course-price">$960</span>
+        </div>
+      </div>
+      <div class="course-card">
+        <span class="course-icon">✨</span>
+        <div class="course-name">高级创作班</div>
+        <div class="course-desc">为有经验的学员设计。探索现代陶艺表达，结合传统与当代审美，发展个人创作风格。含窑烧指导。</div>
+        <div class="course-meta">
+          <span>8节 · 每节3小时</span>
+          <span class="course-price">$780</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== STATS ==================== -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" data-target="2400">0</div>
+        <div class="stat-label">位学员</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="12">0</div>
+        <div class="stat-label">年教学经验</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="6">0</div>
+        <div class="stat-label">人精品小班</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="98">0</div>
+        <div class="stat-label">% 好评率</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROCESS ==================== -->
+<section class="process">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">教学流程</div>
+      <div class="section-title">四步，从泥到艺</div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第一步</div>
+          <div class="timeline-title">塑形 · 与泥对话</div>
+          <div class="timeline-desc">学习拉坯或手捏技法，将一团陶土赋予形态。感受材料在手中的温度和可塑性。</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第二步</div>
+          <div class="timeline-title">素烧 · 凝固初心</div>
+          <div class="timeline-desc">800°C 的素烧让作品定型。在等待中学习釉料知识，为绘画做准备。</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第三步</div>
+          <div class="timeline-title">绘画 · 心手合一</div>
+          <div class="timeline-desc">在素坯上用釉料进行绘画创作。学习笔法、配色和构图，将想象变为现实。</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第四步</div>
+          <div class="timeline-title">釉烧 · 浴火新生</div>
+          <div class="timeline-desc">1280°C 的高温窑烧，釉色在火焰中绽放。每一件作品都是独一无二的惊喜。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TESTIMONIALS ==================== -->
+<section class="testimonials">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">学员心声</div>
+      <div class="section-title">他们在这里找到了什么</div>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-text">第一次碰到陶土的时候，我以为我会很笨拙。但老师说"没有错误的形状"，那一刻我突然放松了。现在每周最期待的就是来工作室。</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">林</div>
+          <div>
+            <div class="testimonial-name">林小雨</div>
+            <div class="testimonial-role">平面设计师 · 学员1年</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">作为一个程序员，我的生活被代码填满。陶瓷绘画让我找到了一种完全不同的表达方式。现在家里到处都是我做的杯子。</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">张</div>
+          <div>
+            <div class="testimonial-name">张明远</div>
+            <div class="testimonial-role">软件工程师 · 学员2年</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta">
+  <div class="cta-bg"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-label">开始你的旅程</div>
+    <div class="section-title">双手创造的美<br>远比你想象的更多</div>
+    <p>预约一节免费体验课，感受泥与火的魅力</p>
+    <a href="#" class="cta-btn">预约体验课</a>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <p>© 2026 泥与火 · 手工陶瓷绘画工作室</p>
+</footer>
+
+<script>
+// ========================================
+// 1. CUSTOM CURSOR
+// ========================================
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursor-dot');
+let cx = 0, cy = 0, dx = 0, dy = 0;
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cursorDot.style.left = cx - 2.5 + 'px';
+  cursorDot.style.top = cy - 2.5 + 'px';
+});
+function animateCursor() {
+  dx += (cx - dx) * 0.15; dy += (cy - dy) * 0.15;
+  cursor.style.left = dx - 12 + 'px';
+  cursor.style.top = dy - 12 + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a, button, .course-card, .cta-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// ========================================
+// 2. CURSOR TRAIL
+// ========================================
+const trailCanvas = document.getElementById('trail-canvas');
+const trailCtx = trailCanvas.getContext('2d');
+let trails = [];
+function resizeTrail() {
+  trailCanvas.width = window.innerWidth;
+  trailCanvas.height = window.innerHeight;
+}
+resizeTrail();
+window.addEventListener('resize', resizeTrail);
+document.addEventListener('mousemove', e => {
+  for (let i = 0; i < 2; i++) {
+    trails.push({
+      x: e.clientX + (Math.random() - 0.5) * 8,
+      y: e.clientY + (Math.random() - 0.5) * 8,
+      r: Math.random() * 4 + 1,
+      alpha: 0.6,
+      color: ['#C4A882', '#D4956B', '#8B6F4E'][Math.floor(Math.random() * 3)]
+    });
+  }
+});
+function drawTrail() {
+  trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+  for (let i = trails.length - 1; i >= 0; i--) {
+    const t = trails[i];
+    t.alpha -= 0.012;
+    t.r *= 0.995;
+    if (t.alpha <= 0) { trails.splice(i, 1); continue; }
+    trailCtx.beginPath();
+    trailCtx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
+    trailCtx.fillStyle = t.color;
+    trailCtx.globalAlpha = t.alpha;
+    trailCtx.fill();
+  }
+  trailCtx.globalAlpha = 1;
+  requestAnimationFrame(drawTrail);
+}
+drawTrail();
+
+// ========================================
+// 3. PARTICLE HERO
+// ========================================
+const pCanvas = document.getElementById('particle-canvas');
+const pCtx = pCanvas.getContext('2d');
+let pw, ph, particles = [], mouse = { x: -1000, y: -1000 };
+function resizeParticles() {
+  pw = pCanvas.width = pCanvas.offsetWidth;
+  ph = pCanvas.height = pCanvas.offsetHeight;
+}
+resizeParticles();
+window.addEventListener('resize', resizeParticles);
+
+const pColors = ['#C4A882', '#D4956B', '#8B6F4E', '#E8D5B7', '#A0785A'];
+for (let i = 0; i < 100; i++) {
+  particles.push({
+    x: Math.random() * pw, y: Math.random() * ph,
+    vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2.5 + 0.5,
+    color: pColors[Math.floor(Math.random() * pColors.length)],
+    alpha: Math.random() * 0.5 + 0.2
+  });
+}
+
+document.querySelector('.hero').addEventListener('mousemove', e => {
+  const rect = pCanvas.getBoundingClientRect();
+  mouse.x = e.clientX - rect.left;
+  mouse.y = e.clientY - rect.top;
+});
+
+function drawParticles() {
+  pCtx.fillStyle = 'rgba(10,10,10,0.2)';
+  pCtx.fillRect(0, 0, pw, ph);
+  particles.forEach(p => {
+    const ddx = mouse.x - p.x, ddy = mouse.y - p.y;
+    const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+    if (dist < 150) { p.vx += ddx * 0.0002; p.vy += ddy * 0.0002; }
+    p.x += p.vx; p.y += p.vy;
+    p.vx *= 0.995; p.vy *= 0.995;
+    if (p.x < 0) p.x = pw; if (p.x > pw) p.x = 0;
+    if (p.y < 0) p.y = ph; if (p.y > ph) p.y = 0;
+    pCtx.beginPath();
+    pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    pCtx.fillStyle = p.color;
+    pCtx.globalAlpha = p.alpha;
+    pCtx.fill();
+  });
+  pCtx.globalAlpha = 0.06;
+  pCtx.strokeStyle = '#C4A882';
+  pCtx.lineWidth = 0.5;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const ddx = particles[i].x - particles[j].x, ddy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(ddx * ddx + ddy * ddy);
+      if (d < 100) {
+        pCtx.beginPath();
+        pCtx.moveTo(particles[i].x, particles[i].y);
+        pCtx.lineTo(particles[j].x, particles[j].y);
+        pCtx.stroke();
+      }
+    }
+  }
+  pCtx.globalAlpha = 1;
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ========================================
+// 4. HERO TEXT REVEAL
+// ========================================
+setTimeout(() => {
+  document.getElementById('hero-tagline').style.transition = 'opacity 1s ease';
+  document.getElementById('hero-tagline').style.opacity = '1';
+}, 300);
+setTimeout(() => {
+  document.querySelectorAll('.hero-title .char').forEach((c, i) => {
+    setTimeout(() => c.classList.add('visible'), i * 150);
+  });
+}, 800);
+setTimeout(() => {
+  document.getElementById('hero-sub').style.transition = 'opacity 1.2s ease';
+  document.getElementById('hero-sub').style.opacity = '1';
+}, 1800);
+
+// ========================================
+// 5. MORPHING BLOBS
+// ========================================
+let blobT = 0;
+function makeBlob(t, offset, size) {
+  const pts = [];
+  for (let i = 0; i < 8; i++) {
+    const angle = (i / 8) * Math.PI * 2;
+    const r = size + Math.sin(t + i * 0.9 + offset) * (size * 0.25) + Math.cos(t * 1.3 + i * 1.1 + offset) * (size * 0.15);
+    pts.push({ x: 200 + r * Math.cos(angle), y: 200 + r * Math.sin(angle) });
+  }
+  let d = `M${pts[0].x},${pts[0].y}`;
+  for (let i = 0; i < pts.length; i++) {
+    const p1 = pts[i], p2 = pts[(i + 1) % pts.length];
+    d += ` Q${p1.x},${p1.y} ${(p1.x + p2.x) / 2},${(p1.y + p2.y) / 2}`;
+  }
+  return d + 'Z';
+}
+function animateBlobs() {
+  blobT += 0.012;
+  document.getElementById('blob1').setAttribute('d', makeBlob(blobT, 0, 120));
+  document.getElementById('blob2').setAttribute('d', makeBlob(blobT * 0.8, 2, 140));
+  requestAnimationFrame(animateBlobs);
+}
+animateBlobs();
+
+// ========================================
+// 6. BLOB DIVIDER
+// ========================================
+let divT = 0;
+function animateDivider() {
+  divT += 0.008;
+  const w = 1440, h = 200;
+  let d = `M0,${h}`;
+  for (let x = 0; x <= w; x += 20) {
+    const y = 80 + Math.sin(x * 0.003 + divT) * 30 + Math.sin(x * 0.007 + divT * 1.5) * 15;
+    d += ` L${x},${y}`;
+  }
+  d += ` L${w},${h} Z`;
+  document.getElementById('divider-blob').setAttribute('d', d);
+  requestAnimationFrame(animateDivider);
+}
+animateDivider();
+
+// ========================================
+// 7. SCROLL ANIMATIONS (IntersectionObserver)
+// ========================================
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Counter animation for stats
+      if (entry.target.classList.contains('stat-number')) {
+        const target = parseInt(entry.target.dataset.target);
+        let current = 0;
+        const increment = target / 60;
+        const counter = setInterval(() => {
+          current += increment;
+          if (current >= target) { current = target; clearInterval(counter); }
+          entry.target.textContent = Math.round(current);
+        }, 25);
+      }
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.course-card, .timeline-item, .stat-number').forEach(el => observer.observe(el));
+
+// ========================================
+// 8. PARALLAX ON MOUSE (for sections)
+// ========================================
+document.addEventListener('mousemove', e => {
+  const mx = (e.clientX / window.innerWidth - 0.5) * 2;
+  const my = (e.clientY / window.innerHeight - 0.5) * 2;
+  document.querySelectorAll('.testimonial-card').forEach((card, i) => {
+    const depth = (i + 1) * 3;
+    card.style.transform = `translate(${mx * depth}px, ${my * depth}px)`;
+  });
+});
+</script>
+</body>
+</html>
