@@ -123,6 +123,31 @@ section{position:relative;padding:120px 0}
 footer{padding:40px;text-align:center;border-top:1px solid rgba(196,168,130,0.08)}
 footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
 
+/* Gallery */
+.artwork-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.artwork-item{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:3/4;opacity:0;transform:translateY(30px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+.artwork-item:nth-child(2){transition-delay:0.1s}
+.artwork-item:nth-child(3){transition-delay:0.2s}
+.artwork-item:nth-child(4){transition-delay:0.3s}
+.artwork-item:nth-child(5){transition-delay:0.4s}
+.artwork-item:nth-child(6){transition-delay:0.5s}
+.artwork-item.artwork-wide{grid-column:span 2;aspect-ratio:4/3}
+.artwork-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.artwork-item:hover img{transform:scale(1.06)}
+.artwork-caption{position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.75),transparent);opacity:0;transform:translateY(8px);transition:all 0.4s ease}
+.artwork-item:hover .artwork-caption{opacity:1;transform:translateY(0)}
+.artwork-tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(196,168,130,0.2);color:#E8D5B7;letter-spacing:2px;margin-bottom:8px}
+.artwork-caption p{font-size:14px;color:#C4A882;margin:0}
+
+/* Video */
+.video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.video-item.video-main{grid-column:span 2}
+.video-item{opacity:0;transform:translateY(30px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+.video-item:nth-child(2){transition-delay:0.15s}
+.video-item:nth-child(3){transition-delay:0.3s}
+.video-item video{width:100%;border-radius:16px;display:block;background:#000}
+.video-desc{font-size:13px;color:#8B6F4E;margin-top:12px;text-align:center;letter-spacing:2px}
+
 /* Visible class for scroll animations */
 .visible{opacity:1 !important;transform:translateY(0) !important}
 .char.visible{opacity:1 !important;transform:translateY(0) rotateX(0deg) !important}
@@ -133,6 +158,10 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
   .course-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .testimonial-grid{grid-template-columns:1fr}
+  .artwork-grid{grid-template-columns:1fr}
+  .artwork-item.artwork-wide{grid-column:span 1;aspect-ratio:3/4}
+  .video-grid{grid-template-columns:1fr}
+  .video-item.video-main{grid-column:span 1}
   .timeline-item,.timeline-item:nth-child(odd){flex-direction:column;text-align:left}
   .timeline-content,.timeline-item:nth-child(odd) .timeline-content{padding-left:40px;padding-right:0}
   .timeline::before{left:6px}
@@ -182,22 +211,8 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
         <p>在这个被屏幕包围的时代，我们相信双手的力量。当你拿起画笔，在洁白的瓷面上落下第一笔，那一刻，时间放慢了脚步。</p>
         <p>釉上彩绘是一门古老而优雅的艺术。花鸟虫鱼、山水风景、人物肖像、趣味卡通——每一笔色彩都是你内心世界的投射，每一件作品都经历多次烧制，在窑火中绽放出独一无二的光泽。</p>
       </div>
-      <div class="philosophy-visual">
-        <svg id="blob-container" viewBox="0 0 400 400">
-          <defs>
-            <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#C4A882"/>
-              <stop offset="50%" style="stop-color:#D4956B"/>
-              <stop offset="100%" style="stop-color:#8B6F4E"/>
-            </linearGradient>
-            <linearGradient id="blobGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style="stop-color:#A0785A;stop-opacity:0.4"/>
-              <stop offset="100%" style="stop-color:#D4956B;stop-opacity:0.1"/>
-            </linearGradient>
-          </defs>
-          <path id="blob1" fill="url(#blobGrad)" opacity="0.7"/>
-          <path id="blob2" fill="url(#blobGrad2)" opacity="0.5"/>
-        </svg>
+      <div class="philosophy-visual" style="height:auto;">
+        <img src="img-iris.jpeg" alt="釉上彩绘作品 — 鸢尾花" style="width:100%;max-width:400px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
       </div>
     </div>
   </div>
@@ -262,6 +277,84 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
       <div class="stat-card">
         <div class="stat-number" data-target="100">0</div>
         <div class="stat-label">% 材料烧制全包</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== GALLERY ==================== -->
+<section class="gallery-section" style="padding:120px 0;background:#0a0a0a;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">作品展示</div>
+      <div class="section-title">每一件都是独一无二的艺术</div>
+    </div>
+    <div class="artwork-grid">
+      <div class="artwork-item artwork-wide">
+        <img src="img-hummingbird.jpeg" alt="蜂鸟花卉彩绘盘" loading="lazy">
+        <div class="artwork-caption">
+          <span class="artwork-tag">花鸟</span>
+          <p>蜂鸟与热带花卉 · 釉上彩绘圆盘</p>
+        </div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-horse.jpeg" alt="青花骏马彩绘盘" loading="lazy">
+        <div class="artwork-caption">
+          <span class="artwork-tag">动物</span>
+          <p>青花骏马 · 方形瓷盘</p>
+        </div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-iris.jpeg" alt="鸢尾花彩绘瓷板" loading="lazy">
+        <div class="artwork-caption">
+          <span class="artwork-tag">花卉</span>
+          <p>鸢尾花 · 现代风格瓷板画</p>
+        </div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-ginkgo.jpeg" alt="银杏蓝莓彩绘盘" loading="lazy">
+        <div class="artwork-caption">
+          <span class="artwork-tag">植物</span>
+          <p>银杏与蓝莓 · 釉上彩绘圆盘</p>
+        </div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-orchid.jpeg" alt="兰花彩绘盘" loading="lazy">
+        <div class="artwork-caption">
+          <span class="artwork-tag">花卉</span>
+          <p>兰花 · 金边釉上彩绘盘</p>
+        </div>
+      </div>
+      <div class="artwork-item artwork-wide">
+        <img src="img-cups.jpeg" alt="果实系列杯组" loading="lazy">
+        <div class="artwork-caption">
+          <span class="artwork-tag">器皿</span>
+          <p>果实系列 · 手绘茶杯与盘组</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== VIDEO ==================== -->
+<section class="video-section" style="padding:120px 0;background:#0e0c08;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">创作过程</div>
+      <div class="section-title">用镜头记录笔尖的艺术</div>
+    </div>
+    <div class="video-grid">
+      <div class="video-item video-main">
+        <video src="video-demo.mp4" controls playsinline preload="metadata" poster="img-hummingbird.jpeg"></video>
+        <p class="video-desc">彩绘创作过程实录</p>
+      </div>
+      <div class="video-item">
+        <video src="video-2906.mp4" controls playsinline preload="metadata" poster="img-ginkgo.jpeg"></video>
+        <p class="video-desc">绘画技法演示</p>
+      </div>
+      <div class="video-item">
+        <video src="video-2907.mp4" controls playsinline preload="metadata" poster="img-orchid.jpeg"></video>
+        <p class="video-desc">作品细节展示</p>
       </div>
     </div>
   </div>
@@ -509,30 +602,8 @@ setTimeout(() => {
 }, 1800);
 
 // ========================================
-// 5. MORPHING BLOBS
+// 5. MORPHING BLOBS (removed - replaced with image)
 // ========================================
-let blobT = 0;
-function makeBlob(t, offset, size) {
-  const pts = [];
-  for (let i = 0; i < 8; i++) {
-    const angle = (i / 8) * Math.PI * 2;
-    const r = size + Math.sin(t + i * 0.9 + offset) * (size * 0.25) + Math.cos(t * 1.3 + i * 1.1 + offset) * (size * 0.15);
-    pts.push({ x: 200 + r * Math.cos(angle), y: 200 + r * Math.sin(angle) });
-  }
-  let d = `M${pts[0].x},${pts[0].y}`;
-  for (let i = 0; i < pts.length; i++) {
-    const p1 = pts[i], p2 = pts[(i + 1) % pts.length];
-    d += ` Q${p1.x},${p1.y} ${(p1.x + p2.x) / 2},${(p1.y + p2.y) / 2}`;
-  }
-  return d + 'Z';
-}
-function animateBlobs() {
-  blobT += 0.012;
-  document.getElementById('blob1').setAttribute('d', makeBlob(blobT, 0, 120));
-  document.getElementById('blob2').setAttribute('d', makeBlob(blobT * 0.8, 2, 140));
-  requestAnimationFrame(animateBlobs);
-}
-animateBlobs();
 
 // ========================================
 // 6. BLOB DIVIDER
@@ -574,7 +645,7 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.2 });
 
-document.querySelectorAll('.course-card, .timeline-item, .stat-number').forEach(el => observer.observe(el));
+document.querySelectorAll('.course-card, .timeline-item, .stat-number, .artwork-item, .video-item').forEach(el => observer.observe(el));
 
 // ========================================
 // 8. PARALLAX ON MOUSE (for sections)
