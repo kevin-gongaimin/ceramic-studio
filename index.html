@@ -3,513 +3,683 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>陶瓷艺术 · 釉上彩绘工作室</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<title>泥与火 — 釉上彩绘工作室</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --paper:#FAF7F2;--paper2:#F2EEE6;--paper3:#E8E2D5;
-  --ink:#1F1B1A;--ink2:#3a342f;--ink3:#6b6359;--ink4:#9b9389;
-  --blue:#2C5F8D;--blue-light:#4a7ba8;
-  --red:#C73E3A;--gold:#C8A96E;
-  --serif:'Noto Serif SC',serif;--sans:'Noto Sans SC',sans-serif;--play:'Playfair Display',serif;
+html{scroll-behavior:smooth}
+body{background:#0a0a0a;color:#E8D5B7;font-family:'Noto Sans SC',sans-serif;overflow-x:hidden;cursor:none}
+
+/* Custom cursor */
+.cursor{position:fixed;width:24px;height:24px;border:1.5px solid #C4A882;border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease,opacity 0.3s;mix-blend-mode:difference}
+.cursor-dot{position:fixed;width:5px;height:5px;background:#D4956B;border-radius:50%;pointer-events:none;z-index:9999}
+.cursor.hover{transform:scale(2);opacity:0.6}
+
+/* Trail canvas */
+#trail-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#3a2a1a;border-radius:3px}
+
+/* Hero */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#particle-canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-tagline{font-size:clamp(12px,1.5vw,16px);letter-spacing:8px;color:#8B6F4E;text-transform:uppercase;margin-bottom:24px;opacity:0}
+.hero-title{font-family:'Noto Serif SC',serif;font-size:clamp(48px,8vw,120px);font-weight:700;line-height:1.1;margin-bottom:16px}
+.hero-title .char{display:inline-block;opacity:0;transform:translateY(80px) rotateX(90deg);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
+.hero-sub{font-size:clamp(14px,2vw,20px);font-weight:300;color:#A0785A;letter-spacing:4px;opacity:0}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeInUp 1s 2.5s forwards}
+.hero-scroll span{font-size:11px;letter-spacing:3px;color:#8B6F4E}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,#8B6F4E,transparent);animation:scrollPulse 2s infinite}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(0.5)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes fadeInUp{to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* Blob divider */
+.blob-divider{position:relative;height:200px;overflow:hidden}
+.blob-divider svg{position:absolute;width:100%;height:100%}
+
+/* Section base */
+section{position:relative;padding:120px 0}
+.container{max-width:1100px;margin:0 auto;padding:0 40px}
+.section-label{font-size:11px;letter-spacing:6px;color:#8B6F4E;text-transform:uppercase;margin-bottom:16px}
+.section-title{font-family:'Noto Serif SC',serif;font-size:clamp(28px,4vw,48px);font-weight:600;margin-bottom:48px;line-height:1.3}
+
+/* About / Philosophy */
+.about{background:#0a0a0a}
+.philosophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.philosophy-text p{font-size:16px;line-height:2;color:#B8A080;margin-bottom:20px;font-weight:300}
+.philosophy-visual{position:relative;height:400px;display:flex;align-items:center;justify-content:center}
+#blob-container{width:100%;height:100%}
+
+/* Courses */
+.courses{background:#0e0c08}
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.course-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid rgba(196,168,130,0.1);border-radius:20px;padding:36px 28px;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;opacity:0;transform:translateY(40px)}
+.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#C4A882,transparent);opacity:0;transition:opacity 0.5s}
+.course-card:hover{transform:translateY(-8px);border-color:rgba(196,168,130,0.3);background:rgba(255,255,255,0.06)}
+.course-card:hover::before{opacity:1}
+.course-icon{font-size:36px;margin-bottom:20px;display:block}
+.course-name{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:12px}
+.course-desc{font-size:13px;color:#8B6F4E;line-height:1.8;margin-bottom:20px}
+.course-meta{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid rgba(196,168,130,0.1)}
+.course-meta span{font-size:12px;color:#A0785A}
+.course-price{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;color:#D4956B}
+
+/* Stats */
+.stats-section{padding:80px 0;background:#080604}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(16px);border:1px solid rgba(196,168,130,0.08);border-radius:16px;padding:32px 24px;text-align:center}
+.stat-number{font-family:'Noto Serif SC',serif;font-size:42px;font-weight:700;color:#D4956B;margin-bottom:8px}
+.stat-label{font-size:13px;color:#8B6F4E;letter-spacing:2px}
+
+/* Gallery parallax */
+.gallery{padding:120px 0;overflow:hidden;background:#0a0a0a}
+.gallery-track{display:flex;gap:24px;padding:0 40px}
+.gallery-item{flex:0 0 320px;height:420px;border-radius:16px;overflow:hidden;position:relative}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s cubic-bezier(0.16,1,0.3,1)}
+.gallery-item:hover img{transform:scale(1.08)}
+.gallery-overlay{position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);opacity:0;transform:translateY(10px);transition:all 0.4s}
+.gallery-item:hover .gallery-overlay{opacity:1;transform:translateY(0)}
+.gallery-overlay span{font-size:14px;letter-spacing:2px}
+
+/* Process / Timeline */
+.process{background:#0e0c08;position:relative}
+.timeline{position:relative;max-width:700px;margin:0 auto}
+.timeline::before{content:'';position:absolute;left:50%;width:1px;height:100%;background:linear-gradient(to bottom,transparent,#3a2a1a,#3a2a1a,transparent);transform:translateX(-50%)}
+.timeline-item{position:relative;padding:0 0 60px;display:flex;align-items:flex-start;opacity:0;transform:translateY(30px)}
+.timeline-item:nth-child(odd){flex-direction:row-reverse;text-align:right}
+.timeline-item:nth-child(odd) .timeline-content{padding-right:60px;padding-left:0}
+.timeline-content{flex:1;padding-left:60px}
+.timeline-dot{position:absolute;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;border:2px solid #C4A882;background:#0e0c08;z-index:2}
+.timeline-step{font-size:11px;letter-spacing:4px;color:#8B6F4E;margin-bottom:8px}
+.timeline-title{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:8px}
+.timeline-desc{font-size:14px;color:#8B6F4E;line-height:1.7}
+
+/* Testimonials */
+.testimonials{background:#0a0a0a;padding:120px 0}
+.testimonial-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+.testimonial-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);border:1px solid rgba(196,168,130,0.08);border-radius:20px;padding:36px;position:relative}
+.testimonial-card::before{content:'\201C';font-family:'Noto Serif SC',serif;font-size:80px;color:rgba(196,168,130,0.1);position:absolute;top:10px;left:24px;line-height:1}
+.testimonial-text{font-size:15px;line-height:1.9;color:#B8A080;margin-bottom:20px;position:relative;z-index:1}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.testimonial-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#8B6F4E);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500}
+.testimonial-name{font-size:14px;font-weight:500}
+.testimonial-role{font-size:12px;color:#8B6F4E}
+
+/* CTA */
+.cta{padding:160px 0;text-align:center;position:relative;overflow:hidden}
+.cta-bg{position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(196,168,130,0.08),transparent 70%)}
+.cta .section-title{margin-bottom:24px}
+.cta p{font-size:16px;color:#8B6F4E;margin-bottom:48px;font-weight:300}
+.cta-btn{display:inline-block;padding:18px 56px;border:1.5px solid #C4A882;border-radius:60px;font-family:'Noto Serif SC',serif;font-size:16px;color:#E8D5B7;text-decoration:none;letter-spacing:4px;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;background:transparent;cursor:none}
+.cta-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(196,168,130,0.15);border-radius:50%;transform:translate(-50%,-50%);transition:all 0.6s}
+.cta-btn:hover{border-color:#D4956B;color:#fff;transform:scale(1.05)}
+.cta-btn:hover::before{width:300px;height:300px}
+
+/* Footer */
+footer{padding:40px;text-align:center;border-top:1px solid rgba(196,168,130,0.08)}
+footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
+
+/* Visible class for scroll animations */
+.visible{opacity:1 !important;transform:translateY(0) !important}
+.char.visible{opacity:1 !important;transform:translateY(0) rotateX(0deg) !important}
+
+/* Gallery */
+.artwork-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.artwork-item{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:3/4;opacity:0;transform:translateY(30px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+.artwork-item:nth-child(2){transition-delay:0.05s}
+.artwork-item:nth-child(3){transition-delay:0.1s}
+.artwork-item:nth-child(4){transition-delay:0.15s}
+.artwork-item:nth-child(5){transition-delay:0.1s}
+.artwork-item:nth-child(6){transition-delay:0.15s}
+.artwork-item:nth-child(7){transition-delay:0.2s}
+.artwork-item:nth-child(8){transition-delay:0.1s}
+.artwork-item:nth-child(9){transition-delay:0.15s}
+.artwork-item:nth-child(10){transition-delay:0.2s}
+.artwork-item.artwork-wide{grid-column:span 2;aspect-ratio:4/3}
+.artwork-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.artwork-item:hover img{transform:scale(1.06)}
+.artwork-caption{position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);opacity:0;transform:translateY(8px);transition:all 0.4s ease}
+.artwork-item:hover .artwork-caption{opacity:1;transform:translateY(0)}
+.artwork-tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(196,168,130,0.25);color:#E8D5B7;letter-spacing:2px;margin-bottom:8px;border:1px solid rgba(196,168,130,0.3)}
+.artwork-caption p{font-size:14px;color:#C4A882;margin:0}
+
+/* Contact */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px;background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(196,168,130,0.15);border-radius:20px}
+.qr-img{width:240px;height:auto;max-width:100%;border-radius:12px;display:block}
+.qr-label{font-family:'Noto Serif SC',serif;font-size:16px;color:#E8D5B7;letter-spacing:2px;margin-top:8px}
+.qr-sub{font-size:11px;color:#8B6F4E;letter-spacing:3px;text-align:center}
+.contact-info-title{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:600;color:#E8D5B7;margin-bottom:24px;letter-spacing:2px}
+.info-row{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;padding:20px 24px;background:rgba(255,255,255,0.03);border:1px solid rgba(196,168,130,0.1);border-radius:12px;transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}
+.info-row:hover{border-color:rgba(196,168,130,0.25);background:rgba(255,255,255,0.05)}
+.info-icon{font-size:22px;line-height:1.2;flex-shrink:0}
+.info-content{font-size:14px;color:#A0785A;line-height:1.7}
+.info-content strong{display:block;color:#C4A882;margin-bottom:4px;font-family:'Noto Serif SC',serif;font-size:14px;letter-spacing:2px;font-weight:600}
+
+/* Responsive */
+@media(max-width:768px){
+  .philosophy-grid{grid-template-columns:1fr}
+  .course-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .testimonial-grid{grid-template-columns:1fr}
+  .artwork-grid{grid-template-columns:1fr}
+  .artwork-item.artwork-wide{grid-column:span 1;aspect-ratio:3/4}
+  .contact-grid{grid-template-columns:1fr;gap:32px}
+  .timeline-item,.timeline-item:nth-child(odd){flex-direction:column;text-align:left}
+  .timeline-content,.timeline-item:nth-child(odd) .timeline-content{padding-left:40px;padding-right:0}
+  .timeline::before{left:6px}
+  .timeline-dot{left:6px}
 }
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden;font-size:16px;line-height:1.7}
-/* Paper texture */
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-
-/* Reveal */
-.rv{opacity:0;transform:translateY(30px);transition:opacity 1.2s cubic-bezier(.25,1,.5,1),transform 1.2s cubic-bezier(.25,1,.5,1)}
-.rv.v{opacity:1;transform:none}
-.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
-
-/* ==== HERO ==== */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:var(--paper)}
-.hero-canvas{position:absolute;inset:0;z-index:1}
-.hero-deco{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:.15}
-.hero-deco svg{width:100%;height:100%}
-.hero-content{position:relative;z-index:3;padding:0 24px;max-width:900px}
-.hero-eyebrow{font-family:var(--play);font-style:italic;font-size:clamp(14px,1.4vw,18px);letter-spacing:.15em;color:var(--ink3);margin-bottom:32px;opacity:0}
-.hero-title{font-family:var(--serif);font-size:clamp(72px,14vw,200px);font-weight:900;line-height:.95;color:var(--ink);margin-bottom:32px;letter-spacing:.05em}
-.hero-title span{display:inline-block;opacity:0;transform:translateY(80px) rotate(4deg);filter:blur(8px);position:relative}
-.hero-en{font-family:var(--play);font-size:clamp(16px,1.8vw,22px);font-style:italic;color:var(--ink3);letter-spacing:.3em;margin-bottom:32px;opacity:0}
-.hero-divider{width:60px;height:1px;background:var(--ink3);margin:0 auto 24px;transform:scaleX(0);transform-origin:center;transition:transform 1s 2s cubic-bezier(.25,1,.5,1)}
-.hero-divider.show{transform:scaleX(1)}
-.hero-sub{font-size:clamp(14px,1.6vw,18px);font-weight:300;color:var(--ink3);letter-spacing:.4em;opacity:0}
-.hero-seal{position:absolute;top:50%;right:5%;transform:translateY(-50%) rotate(-12deg);z-index:3;opacity:0;animation:sealIn 1.5s 2.5s forwards}
-.hero-seal svg{width:clamp(60px,8vw,100px);height:auto}
-@keyframes sealIn{to{opacity:.85}}
-.hero-arrow{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:3;font-family:var(--serif);font-size:13px;color:var(--ink3);letter-spacing:.4em;writing-mode:vertical-rl;display:flex;align-items:center;flex-direction:column;gap:12px;opacity:0;animation:fadein 1s 3s forwards}
-.hero-arrow::after{content:'';width:1px;height:50px;background:linear-gradient(to bottom,var(--ink3),transparent);animation:lineDrop 2s infinite}
-@keyframes fadein{to{opacity:.7}}
-@keyframes lineDrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-
-/* ==== SECTIONS ==== */
-.section{padding:clamp(80px,12vw,160px) 24px;max-width:1100px;margin:0 auto;position:relative;z-index:1}
-.section-wide{max-width:1280px}
-.section-full{max-width:100%;padding-left:0;padding-right:0}
-.label{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:500;letter-spacing:.4em;color:var(--red);margin-bottom:16px;text-transform:uppercase;font-family:var(--play)}
-.label::before{content:'';width:24px;height:1px;background:var(--red)}
-.headline{font-family:var(--serif);font-size:clamp(36px,5.5vw,64px);font-weight:700;letter-spacing:.04em;line-height:1.2;color:var(--ink)}
-.headline .ink{color:var(--blue);font-style:italic;font-family:var(--play);font-weight:400}
-.headline-sub{font-size:clamp(15px,1.4vw,18px);color:var(--ink3);margin-top:16px;font-weight:300;letter-spacing:.05em}
-.text-center{text-align:center}
-
-/* ==== PHILOSOPHY ==== */
-.philo-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,8vw,100px);align-items:center;margin-top:clamp(40px,6vw,72px)}
-.philo-text p{font-size:17px;line-height:2;color:var(--ink2);margin-bottom:24px;font-weight:300}
-.philo-text .quote{font-family:var(--serif);font-size:clamp(28px,3.5vw,40px);font-weight:600;line-height:1.5;color:var(--ink);margin-bottom:32px;letter-spacing:.08em}
-.philo-text .quote em{color:var(--red);font-style:normal}
-.philo-img{position:relative;aspect-ratio:4/5;border-radius:8px;overflow:hidden;box-shadow:0 30px 80px -20px rgba(31,27,26,.25)}
-.philo-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s cubic-bezier(.25,1,.5,1)}
-.philo-img:hover img{transform:scale(1.04)}
-.philo-img::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 60%,rgba(31,27,26,.1));pointer-events:none}
-
-/* ==== GALLERY ==== */
-.gallery-section{padding:clamp(80px,10vw,140px) 0;background:var(--paper2);position:relative;overflow:hidden}
-.gallery-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:90%;max-width:1200px;height:1px;background:linear-gradient(90deg,transparent,var(--paper3),transparent)}
-.gallery-header{text-align:center;padding:0 24px;margin-bottom:clamp(48px,6vw,72px)}
-.tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:32px;padding:0 24px}
-.tab{padding:10px 24px;border-radius:30px;background:transparent;border:1px solid var(--paper3);font-family:var(--serif);font-size:15px;font-weight:500;color:var(--ink3);cursor:pointer;transition:all .4s cubic-bezier(.25,1,.5,1);letter-spacing:.1em}
-.tab:hover{color:var(--ink);border-color:var(--ink3)}
-.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.gallery-track{display:flex;gap:20px;padding:48px clamp(20px,4vw,60px);overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;transition:opacity .4s}
-.gallery-track::-webkit-scrollbar{display:none}
-.gallery-track:active{cursor:grabbing}
-.gallery-track.fading{opacity:0}
-.g-item{flex:0 0 clamp(280px,26vw,360px);aspect-ratio:3/4;border-radius:6px;overflow:hidden;scroll-snap-align:start;position:relative;transition:transform .6s cubic-bezier(.25,1,.5,1);background:#fff;box-shadow:0 20px 60px -20px rgba(31,27,26,.2)}
-.g-item.wide{flex:0 0 clamp(380px,34vw,480px);aspect-ratio:4/3}
-.g-item img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.25,1,.5,1)}
-.g-item:hover{transform:translateY(-6px)}
-.g-item:hover img{transform:scale(1.06)}
-/* Seal stamp on hover */
-.g-seal{position:absolute;top:24px;right:24px;width:64px;height:64px;opacity:0;transform:scale(.5) rotate(-15deg);transition:all .5s cubic-bezier(.25,1,.5,1);pointer-events:none;z-index:2}
-.g-item:hover .g-seal{opacity:.9;transform:scale(1) rotate(-8deg)}
-.g-seal svg{width:100%;height:100%;filter:drop-shadow(0 2px 4px rgba(199,62,58,.3))}
-.g-info{position:absolute;bottom:0;left:0;right:0;padding:24px 20px;background:linear-gradient(to top,rgba(31,27,26,.9) 0%,rgba(31,27,26,.6) 70%,transparent);transform:translateY(100%);transition:transform .5s cubic-bezier(.25,1,.5,1)}
-.g-item:hover .g-info{transform:translateY(0)}
-.g-info p{font-family:var(--serif);font-size:14px;color:#fff;letter-spacing:.05em}
-.gallery-hint{text-align:center;font-size:12px;color:var(--ink4);letter-spacing:.3em;margin-top:8px;font-family:var(--play);font-style:italic}
-
-/* ==== COURSES ==== */
-.courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:clamp(40px,6vw,64px)}
-.course-card{background:#fff;border-radius:8px;padding:48px 36px;position:relative;overflow:hidden;transition:all .6s cubic-bezier(.25,1,.5,1);border:1px solid var(--paper3);box-shadow:0 4px 20px rgba(31,27,26,.04)}
-.course-card.featured{background:linear-gradient(180deg,#fff 0%,#fdfaf2 100%);border-color:var(--gold)}
-.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .8s cubic-bezier(.25,1,.5,1)}
-.course-card.featured::before{background:var(--red)}
-.course-card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(31,27,26,.08)}
-.course-card:hover::before{transform:scaleX(1)}
-.featured-badge{position:absolute;top:16px;right:16px;font-family:var(--play);font-style:italic;font-size:11px;color:var(--red);letter-spacing:.2em;padding:4px 10px;border:1px solid var(--red);border-radius:20px}
-.course-num{font-family:var(--play);font-size:14px;color:var(--ink4);letter-spacing:.2em;margin-bottom:24px;font-style:italic}
-.course-name{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:.05em;margin-bottom:16px;color:var(--ink)}
-.course-desc{font-size:14px;color:var(--ink2);line-height:1.9;margin-bottom:32px;font-weight:300}
-.course-price-row{padding-top:24px;border-top:1px solid var(--paper3)}
-.course-price{font-family:var(--serif);font-size:42px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1}
-.course-price .currency{font-size:16px;color:var(--ink3);margin-right:4px;vertical-align:top;letter-spacing:0}
-.course-price .unit{font-size:14px;color:var(--ink3);font-weight:400;margin-left:6px}
-.course-meta{font-size:12px;color:var(--ink3);margin-top:8px;letter-spacing:.05em}
-.course-note{margin-top:32px;padding:20px 28px;background:rgba(44,95,141,.04);border-left:3px solid var(--blue);border-radius:4px}
-.course-note p{font-size:13px;color:var(--ink2);line-height:1.8}.course-note strong{color:var(--blue)}
-
-/* ==== STATS ==== */
-.stats-bar{padding:64px 24px;background:var(--paper);border-top:1px solid var(--paper3);border-bottom:1px solid var(--paper3)}
-.stats-row{display:flex;justify-content:center;gap:clamp(32px,7vw,80px);max-width:1100px;margin:0 auto}
-.stat-item{text-align:center;position:relative}
-.stat-item:not(:last-child)::after{content:'';position:absolute;right:calc(-1 * clamp(16px,3.5vw,40px));top:50%;transform:translateY(-50%);width:1px;height:40px;background:var(--paper3)}
-.stat-val{font-family:var(--serif);font-size:clamp(40px,5.5vw,56px);font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em}
-.stat-lbl{font-size:11px;color:var(--ink3);letter-spacing:.3em;margin-top:8px;text-transform:uppercase;font-family:var(--play)}
-
-/* ==== PROCESS ==== */
-.process-section{background:var(--paper);padding:clamp(80px,12vw,160px) 24px}
-.process-wrap{max-width:1100px;margin:0 auto}
-.process-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:clamp(48px,6vw,72px);position:relative}
-.process-row::before{content:'';position:absolute;top:48px;left:8%;right:8%;height:1px;background:repeating-linear-gradient(90deg,var(--ink4) 0,var(--ink4) 4px,transparent 4px,transparent 12px)}
-.p-step{text-align:center;position:relative;z-index:1}
-.p-circle{width:96px;height:96px;margin:0 auto 24px;border-radius:50%;background:var(--paper);border:1px solid var(--paper3);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:32px;color:var(--ink);position:relative;transition:all .5s cubic-bezier(.25,1,.5,1)}
-.p-step:hover .p-circle{background:var(--ink);color:var(--paper);border-color:var(--ink);transform:scale(1.05)}
-.p-num{font-family:var(--play);font-style:italic;font-size:13px;color:var(--red);letter-spacing:.2em;margin-bottom:12px}
-.p-step h4{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:10px;letter-spacing:.08em}
-.p-step p{font-size:13px;color:var(--ink3);line-height:1.7;font-weight:300}
-
-/* ==== TESTIMONIALS ==== */
-.testi-section{background:var(--paper2);padding:clamp(80px,12vw,160px) 24px}
-.testi-wrap{max-width:1100px;margin:0 auto}
-.testi-row{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:clamp(40px,6vw,64px)}
-.testi-card{background:var(--paper);border-radius:8px;padding:40px 36px;position:relative;border:1px solid var(--paper3);transition:all .5s cubic-bezier(.25,1,.5,1)}
-.testi-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(31,27,26,.08)}
-.testi-quote{position:absolute;top:16px;right:24px;font-family:var(--serif);font-size:80px;color:var(--paper3);line-height:1;font-weight:700}
-.testi-text{font-size:15px;line-height:2;color:var(--ink2);margin-bottom:24px;position:relative;z-index:1;font-weight:300}
-.testi-author{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid var(--paper3)}
-.testi-av{width:44px;height:44px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;font-weight:600;color:#fff}
-.testi-name{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--ink);letter-spacing:.05em}
-.testi-role{font-size:12px;color:var(--ink3);margin-top:2px}
-
-/* ==== CONTACT / CTA ==== */
-.contact-section{padding:clamp(100px,14vw,180px) 24px;background:var(--paper);text-align:center;position:relative;overflow:hidden}
-.contact-section::before{content:'';position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(199,62,58,.04),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
-.contact-wrap{max-width:1100px;margin:0 auto;position:relative;z-index:1}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:clamp(48px,6vw,80px);align-items:center;text-align:left}
-.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px;background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(31,27,26,.08);border:1px solid var(--paper3);position:relative}
-.qr-wrap::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:40%;height:1px;background:var(--red)}
-.qr-img{width:200px;height:200px;border-radius:8px}
-.qr-label{font-family:var(--serif);font-size:15px;color:var(--ink);text-align:center;letter-spacing:.1em}
-.qr-sub{font-size:12px;color:var(--ink3);letter-spacing:.2em;margin-top:-12px}
-.contact-info h3{font-family:var(--serif);font-size:28px;font-weight:600;letter-spacing:.05em;margin-bottom:24px;color:var(--ink)}
-.contact-info .info-row{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
-.contact-info .info-icon{font-size:20px;line-height:1.2;width:24px;flex-shrink:0;text-align:center;color:var(--red)}
-.contact-info .info-content{font-size:14px;color:var(--ink2);line-height:1.7}
-.contact-info .info-content strong{display:block;color:var(--ink);margin-bottom:4px;font-family:var(--serif);font-size:14px;letter-spacing:.08em}
-.cta-btn{display:inline-flex;align-items:center;gap:12px;padding:18px 48px;border-radius:0;font-family:var(--serif);font-size:16px;font-weight:600;color:var(--paper);background:var(--ink);text-decoration:none;letter-spacing:.2em;transition:all .4s cubic-bezier(.25,1,.5,1);margin-top:24px;border:1px solid var(--ink)}
-.cta-btn:hover{background:var(--red);border-color:var(--red);transform:translateY(-2px);box-shadow:0 12px 30px rgba(199,62,58,.25)}
-.cta-btn::after{content:'→';transition:transform .3s}.cta-btn:hover::after{transform:translateX(4px)}
-
-/* ==== FOOTER ==== */
-footer{padding:32px 24px;text-align:center;border-top:1px solid var(--paper3)}
-footer p{font-size:12px;color:var(--ink3);letter-spacing:.2em;font-family:var(--serif)}
-
-/* ==== RESPONSIVE ==== */
-@media(max-width:900px){
-  .philo-grid,.courses-grid,.testi-row,.contact-grid{grid-template-columns:1fr;gap:32px}
-  .process-row{grid-template-columns:repeat(2,1fr);gap:40px}
-  .process-row::before{display:none}
-  .stats-row{flex-wrap:wrap;gap:24px}.stat-item{flex:0 0 40%}
-  .stat-item:not(:last-child)::after{display:none}
-  .hero-seal{right:8%;top:18%;transform:translateY(0) rotate(-12deg)}
-}
-@media(max-width:480px){.process-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ==== HERO ==== -->
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- Cursor Trail Canvas -->
+<canvas id="trail-canvas"></canvas>
+
+<!-- ==================== HERO ==================== -->
 <section class="hero">
-  <canvas class="hero-canvas" id="hc"></canvas>
-  <!-- Decorative ink swash -->
-  <div class="hero-deco">
-    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-      <path d="M-100,400 Q300,200 600,450 T1200,400 T1600,500" stroke="#1F1B1A" stroke-width="2" fill="none" opacity=".3"/>
-      <path d="M-100,500 Q400,700 800,550 T1500,600" stroke="#2C5F8D" stroke-width="1" fill="none" opacity=".4"/>
-    </svg>
-  </div>
-  <!-- Seal -->
-  <div class="hero-seal">
-    <svg viewBox="0 0 100 100">
-      <rect x="5" y="5" width="90" height="90" fill="#C73E3A" rx="4"/>
-      <text x="50" y="38" font-family="Noto Serif SC,serif" font-size="22" font-weight="900" fill="#FAF7F2" text-anchor="middle">陶瓷</text>
-      <text x="50" y="72" font-family="Noto Serif SC,serif" font-size="22" font-weight="900" fill="#FAF7F2" text-anchor="middle">艺术</text>
-    </svg>
-  </div>
+  <canvas id="particle-canvas"></canvas>
   <div class="hero-content">
-    <p class="hero-eyebrow">Overglaze Ceramic Painting Studio</p>
-    <h1 class="hero-title"><span>陶</span><span>瓷</span><span>艺</span><span>术</span></h1>
-    <p class="hero-en">CERAMIC · ART · STUDIO</p>
-    <div class="hero-divider" id="hdiv"></div>
-    <p class="hero-sub">釉上彩绘 · 一笔一色一窑火</p>
+    <div class="hero-tagline" id="hero-tagline">Overglaze Ceramic Painting Studio</div>
+    <h1 class="hero-title" id="hero-title">
+      <span class="char">泥</span><span class="char">与</span><span class="char">火</span>
+    </h1>
+    <p class="hero-sub" id="hero-sub">釉上彩绘 · 在瓷器上绘出你的世界</p>
   </div>
-  <div class="hero-arrow">SCROLL</div>
-</section>
-
-<!-- ==== PHILOSOPHY ==== -->
-<section class="section">
-  <div class="philo-grid">
-    <div class="philo-text">
-      <div class="label rv">理 念</div>
-      <p class="quote rv rv-d1">一笔，一色，<br>一<em>窑火</em>。</p>
-      <p class="rv rv-d2">在这个被屏幕包围的时代，我们相信双手的力量。当你拿起画笔，在洁白的瓷面上落下第一笔，那一刻，时间放慢了脚步。</p>
-      <p class="rv rv-d3">釉上彩绘是一门古老而优雅的艺术。花鸟虫鱼、山水风景、人物肖像、趣味卡通——每一笔色彩都是你内心世界的投射，每一件作品都经历多次烧制，在窑火中绽放出独一无二的光泽。</p>
-    </div>
-    <div class="philo-img rv rv-d2">
-      <img src="img-hummingbird.jpeg" alt="蜂鸟花卉釉上彩绘">
-    </div>
+  <div class="hero-scroll">
+    <span>向下探索</span>
+    <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- ==== GALLERY ==== -->
-<section class="gallery-section">
-  <div class="gallery-header">
-    <div class="label rv">作 品</div>
-    <h2 class="headline rv rv-d1">每一件，<span class="ink">独一无二</span></h2>
-    <p class="headline-sub rv rv-d2">花鸟 · 动物 · 风景 · 人物 — 笔下万物</p>
-    <div class="tabs rv rv-d3">
-      <button class="tab active" data-cat="all">全部</button>
-      <button class="tab" data-cat="bird">花鸟</button>
-      <button class="tab" data-cat="animal">动物</button>
-      <button class="tab" data-cat="landscape">风景</button>
-      <button class="tab" data-cat="figure">人物</button>
-    </div>
-  </div>
-  <div class="gallery-track" id="gtrack">
-    <!-- 花鸟 -->
-    <div class="g-item wide" data-cat="bird">
-      <img src="img-hummingbird.jpeg" alt="蜂鸟花卉">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">花</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">鸟</text></svg></div>
-      <div class="g-info"><p>蜂鸟与热带花卉</p></div>
-    </div>
-    <div class="g-item" data-cat="bird">
-      <img src="img-tulip.jpeg" alt="郁金香">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">花</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">鸟</text></svg></div>
-      <div class="g-info"><p>郁金香 · 釉上彩绘</p></div>
-    </div>
-    <div class="g-item" data-cat="bird">
-      <img src="img-daisy.JPG" alt="蓝菊金箔">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">花</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">鸟</text></svg></div>
-      <div class="g-info"><p>蓝菊金箔 · 釉上彩绘</p></div>
-    </div>
-    <!-- 动物 -->
-    <div class="g-item" data-cat="animal">
-      <img src="img-horse.jpeg" alt="青花骏马">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">动</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">物</text></svg></div>
-      <div class="g-info"><p>青花骏马 · 方形瓷盘</p></div>
-    </div>
-    <div class="g-item" data-cat="animal">
-      <img src="img-cat.jpeg" alt="青花猫咪">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">动</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">物</text></svg></div>
-      <div class="g-info"><p>青花猫咪 · 圆盘</p></div>
-    </div>
-    <div class="g-item" data-cat="animal">
-      <img src="img-owl.jpeg" alt="雪中猫头鹰">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">动</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">物</text></svg></div>
-      <div class="g-info"><p>雪中猫头鹰 · 瓷板画</p></div>
-    </div>
-    <!-- 风景 -->
-    <div class="g-item wide" data-cat="landscape">
-      <img src="img-village.jpeg" alt="海边度假屋">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">风</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">景</text></svg></div>
-      <div class="g-info"><p>海边度假屋 · 风景瓷板</p></div>
-    </div>
-    <div class="g-item" data-cat="landscape">
-      <img src="img-chinese.JPG" alt="紫色亭台">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">风</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">景</text></svg></div>
-      <div class="g-info"><p>紫色亭台 · 中国风瓷板</p></div>
-    </div>
-    <div class="g-item" data-cat="landscape">
-      <img src="img-castle.jpeg" alt="粉色乡村">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">风</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">景</text></svg></div>
-      <div class="g-info"><p>粉色乡村 · 风景圆盘</p></div>
-    </div>
-    <!-- 人物 -->
-    <div class="g-item" data-cat="figure">
-      <img src="img-fairy-girl.JPG" alt="花仙子">
-      <div class="g-seal"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#C73E3A" rx="3"/><text x="50" y="44" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">人</text><text x="50" y="76" font-family="Noto Serif SC,serif" font-size="26" font-weight="900" fill="#FAF7F2" text-anchor="middle">物</text></svg></div>
-      <div class="g-info"><p>花仙子 · 人物彩绘</p></div>
-    </div>
-  </div>
-  <p class="gallery-hint">— drag to explore —</p>
-</section>
-
-<!-- ==== COURSES ==== -->
-<section class="section section-wide">
-  <div class="text-center">
-    <div class="label rv">课 程</div>
-    <h2 class="headline rv rv-d1">从零开始的 <span class="ink">陶瓷之旅</span></h2>
-    <p class="headline-sub rv rv-d2">小班教学 · 1对3-5人 · 专业老师全程陪伴</p>
-  </div>
-  <div class="courses-grid">
-    <div class="course-card featured rv">
-      <div class="featured-badge">FIRST CLASS</div>
-      <div class="course-num">CLASS &mdash; 01</div>
-      <div class="course-name">首次体验课</div>
-      <p class="course-desc">零基础友好，专业老师手把手指导。体验釉上彩绘的魅力，完成你的第一件瓷器作品。材料、工具、烧制费用全部包含，无需额外支出。</p>
-      <div class="course-price-row">
-        <div class="course-price"><span class="currency">AUD</span>88</div>
-        <div class="course-meta">3小时 · 周一 10:00 — 13:00 · 全部包含</div>
-      </div>
-    </div>
-    <div class="course-card rv rv-d1">
-      <div class="course-num">CLASS &mdash; 02</div>
-      <div class="course-name">常规彩绘课</div>
-      <p class="course-desc">每周一节，持续精进。学习花鸟虫鱼、风景山水、人物肖像、卡通插画等丰富题材。专业老师指导构图、调色、运笔。需自行购买画具。</p>
-      <div class="course-price-row">
-        <div class="course-price"><span class="currency">AUD</span>100<span class="unit">/ 节</span></div>
-        <div class="course-meta">3小时 · 周一 10:00 — 13:00 · 含烧制费</div>
-      </div>
-    </div>
-    <div class="course-card rv rv-d2">
-      <div class="course-num">CLASS &mdash; 03</div>
-      <div class="course-name">小班精品教学</div>
-      <p class="course-desc">每班仅 3 — 5 人，确保每位学员都能获得充分的专业指导。从选题构思到最终烧制，老师全程陪伴你完成每一个创作环节。</p>
-      <div class="course-price-row">
-        <div class="course-price" style="font-size:24px;">预约咨询</div>
-        <div class="course-meta">3 — 5 人小班 · 专业老师指导</div>
-      </div>
-    </div>
-  </div>
-  <div class="course-note rv">
-    <p>📌 <strong>关于材料</strong>&nbsp;&nbsp;首次体验课 $88 已包含全部材料、工具及烧制费用，可直接到店上课。常规课学员需自行购买个人画具与画料，老师可提供选购建议，烧制费用包含在课程内。</p>
-  </div>
-</section>
-
-<!-- ==== STATS ==== -->
-<div class="stats-bar">
-  <div class="stats-row">
-    <div class="stat-item rv"><div class="stat-val" data-t="3">0</div><div class="stat-lbl">小时 / 节</div></div>
-    <div class="stat-item rv rv-d1"><div class="stat-val" data-t="5">0</div><div class="stat-lbl">人小班</div></div>
-    <div class="stat-item rv rv-d2"><div class="stat-val">$88</div><div class="stat-lbl">体验价</div></div>
-    <div class="stat-item rv rv-d3"><div class="stat-val" data-t="100">0</div><div class="stat-lbl">% 体验全包</div></div>
-  </div>
+<!-- ==================== BLOB DIVIDER ==================== -->
+<div class="blob-divider">
+  <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+    <path id="divider-blob" fill="#0e0c08"/>
+  </svg>
 </div>
 
-<!-- ==== PROCESS ==== -->
-<section class="process-section">
-  <div class="process-wrap">
-    <div class="text-center">
-      <div class="label rv">流 程</div>
-      <h2 class="headline rv rv-d1">一件作品的 <span class="ink">诞生</span></h2>
-    </div>
-    <div class="process-row">
-      <div class="p-step rv">
-        <div class="p-num">STEP — 01</div>
-        <div class="p-circle">壹</div>
-        <h4>选题构图</h4>
-        <p>在老师指导下选择绘画主题，在纸上完成构图设计。</p>
+<!-- ==================== PHILOSOPHY ==================== -->
+<section class="about">
+  <div class="container">
+    <div class="philosophy-grid">
+      <div class="philosophy-text">
+        <div class="section-label">我们的理念</div>
+        <div class="section-title">每一件作品<br>都是一次呼吸</div>
+        <p>在这个被屏幕包围的时代，我们相信双手的力量。当你拿起画笔，在洁白的瓷面上落下第一笔，那一刻，时间放慢了脚步。</p>
+        <p>釉上彩绘是一门古老而优雅的艺术。花鸟虫鱼、山水风景、人物肖像、趣味卡通——每一笔色彩都是你内心世界的投射，每一件作品都经历多次烧制，在窑火中绽放出独一无二的光泽。</p>
       </div>
-      <div class="p-step rv rv-d1">
-        <div class="p-num">STEP — 02</div>
-        <div class="p-circle">贰</div>
-        <h4>釉上彩绘</h4>
-        <p>在白瓷上用专业釉上彩料绘画，学习调色、运笔和层次叠加。</p>
-      </div>
-      <div class="p-step rv rv-d2">
-        <div class="p-num">STEP — 03</div>
-        <div class="p-circle">叁</div>
-        <h4>入窑烧制</h4>
-        <p>送入窑中烧制，让色彩与瓷面永久融合，绽放光泽。</p>
-      </div>
-      <div class="p-step rv rv-d3">
-        <div class="p-num">STEP — 04</div>
-        <div class="p-circle">肆</div>
-        <h4>层层叠加</h4>
-        <p>反复绘画与烧制，逐层叠加色彩，直到作品圆满。</p>
+      <div class="philosophy-visual" style="height:auto;aspect-ratio:4/5;border-radius:16px;overflow:hidden;">
+        <img src="img-hummingbird.jpeg" alt="蜂鸟花卉釉上彩绘" style="width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(0.16,1,0.3,1);">
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==== TESTIMONIALS ==== -->
-<section class="testi-section">
-  <div class="testi-wrap">
-    <div class="text-center">
-      <div class="label rv">心 声</div>
-      <h2 class="headline rv rv-d1">他们在这里 <span class="ink">找到的</span></h2>
-    </div>
-    <div class="testi-row">
-      <div class="testi-card rv">
-        <div class="testi-quote">"</div>
-        <div class="testi-text">第一次在瓷器上画画，手都在抖。但老师非常耐心，一笔一笔地教。烧出来的成品比我想象中美太多了，现在每周一最期待的就是来上课。</div>
-        <div class="testi-author"><div class="testi-av">林</div><div><div class="testi-name">林小雨</div><div class="testi-role">平面设计师 · 学员半年</div></div></div>
-      </div>
-      <div class="testi-card rv rv-d1">
-        <div class="testi-quote">"</div>
-        <div class="testi-text">之前完全没有绘画基础，没想到釉上彩绘这么有成就感。我画了一套花鸟茶杯送给妈妈，她开心了好久。小班教学真的很好，老师能照顾到每个人。</div>
-        <div class="testi-author"><div class="testi-av">陈</div><div><div class="testi-name">陈思婷</div><div class="testi-role">会计师 · 学员1年</div></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==== CONTACT / CTA ==== -->
-<section class="contact-section">
-  <div class="contact-wrap">
-    <div class="text-center">
-      <div class="label rv">预 约</div>
-      <h2 class="headline rv rv-d1">开始你的 <span class="ink">陶瓷之旅</span></h2>
-      <p class="headline-sub rv rv-d2">扫描下方二维码，添加微信预约体验课</p>
-    </div>
-    <div class="contact-grid">
-      <div class="qr-wrap rv">
-        <img src="wechat-qr.png" alt="微信二维码" class="qr-img">
-        <div>
-          <div class="qr-label">Amber 针尖艺术</div>
-          <div class="qr-sub" style="text-align:center;margin-top:6px">SCAN TO ADD WECHAT</div>
+<!-- ==================== COURSES ==================== -->
+<section class="courses">
+  <div class="container">
+    <div class="section-label">课程体系</div>
+    <div class="section-title">从零开始的陶瓷之旅</div>
+    <div class="course-grid">
+      <div class="course-card">
+        <span class="course-icon">🎨</span>
+        <div class="course-name">首次体验课</div>
+        <div class="course-desc">零基础友好，专业老师手把手指导。体验釉上彩绘的魅力，完成你的第一件瓷器作品。材料、工具、烧制费用全包，拎包即来。</div>
+        <div class="course-meta">
+          <span>3小时 · 周一 10:00-13:00</span>
+          <span class="course-price">$88</span>
         </div>
       </div>
-      <div class="contact-info rv rv-d1">
-        <h3>联系我们</h3>
+      <div class="course-card">
+        <span class="course-icon">🖌️</span>
+        <div class="course-name">常规彩绘课</div>
+        <div class="course-desc">每周一节，持续精进。学习花鸟虫鱼、风景山水、人物肖像、卡通插画等丰富题材。专业老师指导构图、调色、笔法，逐步完成多次烧制的完整作品。</div>
+        <div class="course-meta">
+          <span>3小时 · 周一 10:00-13:00</span>
+          <span class="course-price">$100<small style="font-size:12px;color:#8B6F4E;font-weight:400"> /节</small></span>
+        </div>
+      </div>
+      <div class="course-card">
+        <span class="course-icon">✨</span>
+        <div class="course-name">小班精品教学</div>
+        <div class="course-desc">每班仅3-5人，确保每位学员获得充分的专业指导。从选题构思到最终烧制，老师全程陪伴你完成每一个创作环节。</div>
+        <div class="course-meta">
+          <span>3-5人 · 专业老师指导</span>
+          <span class="course-price" style="font-size:16px;">预约咨询</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:32px;padding:20px 24px;background:rgba(196,168,130,0.06);border:1px solid rgba(196,168,130,0.1);border-radius:12px;">
+      <p style="font-size:13px;color:#A0785A;line-height:1.8;">📌 <strong style="color:#C4A882;">温馨提示：</strong>体验课费用包含所有材料、工具及烧制费用。常规课学员需自行购买个人工具和材料，详情请咨询老师。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== STATS ==================== -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" data-target="3">0</div>
+        <div class="stat-label">小时 / 每节课</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="5">0</div>
+        <div class="stat-label">人以内小班</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="88">0</div>
+        <div class="stat-label">AUD 体验价</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" data-target="100">0</div>
+        <div class="stat-label">% 材料烧制全包</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== GALLERY ==================== -->
+<section class="gallery-section" style="padding:120px 0;background:#0a0a0a;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">作品展示</div>
+      <div class="section-title">每一件都是独一无二的艺术</div>
+    </div>
+    <div class="artwork-grid">
+      <div class="artwork-item artwork-wide">
+        <img src="img-hummingbird.jpeg" alt="蜂鸟花卉" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">花鸟</span><p>蜂鸟与热带花卉 · 釉上彩绘圆盘</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-horse.jpeg" alt="青花骏马" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">动物</span><p>青花骏马 · 方形瓷盘</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-owl.jpeg" alt="猫头鹰" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">动物</span><p>雪中猫头鹰 · 瓷板画</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-cat.jpeg" alt="青花猫咪" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">动物</span><p>青花猫咪 · 圆盘</p></div>
+      </div>
+      <div class="artwork-item artwork-wide">
+        <img src="img-village.jpeg" alt="海边度假屋" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">风景</span><p>海边度假屋 · 风景瓷板</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-tulip.jpeg" alt="郁金香" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">花卉</span><p>郁金香 · 釉上彩绘</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-daisy.JPG" alt="蓝菊金箔" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">花卉</span><p>蓝菊金箔 · 釉上彩绘</p></div>
+      </div>
+      <div class="artwork-item artwork-wide">
+        <img src="img-castle.jpeg" alt="粉色乡村" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">风景</span><p>粉色乡村 · 风景圆盘</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-chinese.JPG" alt="中国风" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">国画</span><p>紫色亭台 · 中国风瓷板</p></div>
+      </div>
+      <div class="artwork-item">
+        <img src="img-fairy-girl.JPG" alt="花仙子" loading="lazy">
+        <div class="artwork-caption"><span class="artwork-tag">人物</span><p>花仙子 · 人物彩绘</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROCESS ==================== -->
+<section class="process">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">创作流程</div>
+      <div class="section-title">一件作品的诞生</div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第一步</div>
+          <div class="timeline-title">选题构图 · 胸有成竹</div>
+          <div class="timeline-desc">在老师指导下选择绘画主题——花鸟虫鱼、山水风景、人物肖像或创意卡通，在纸上完成构图设计。</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第二步</div>
+          <div class="timeline-title">釉上彩绘 · 落笔生花</div>
+          <div class="timeline-desc">在白瓷上用专业釉上彩料进行绘画。学习调色、运笔、层次叠加，将构思一笔一笔变为现实。</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第三步</div>
+          <div class="timeline-title">入窑烧制 · 色彩定格</div>
+          <div class="timeline-desc">完成绘画后送入窑中烧制，让色彩与瓷面永久融合。一件精美的作品通常需要多次绘画和烧制。</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-step">第四步</div>
+          <div class="timeline-title">层层叠加 · 精益求精</div>
+          <div class="timeline-desc">反复绘画与烧制，逐层叠加色彩和细节，直到作品呈现出丰富的层次感和光泽。每一次烧制都是一次惊喜。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TESTIMONIALS ==================== -->
+<section class="testimonials">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">学员心声</div>
+      <div class="section-title">他们在这里找到了什么</div>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-text">第一次在瓷器上画画，手都在抖。但老师非常耐心，一笔一笔地教。烧出来的成品比我想象中美太多了，现在每周一最期待的就是来上课。</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">林</div>
+          <div>
+            <div class="testimonial-name">林小雨</div>
+            <div class="testimonial-role">平面设计师 · 学员半年</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">之前完全没有绘画基础，没想到釉上彩绘这么有成就感。我画了一套花鸟茶杯送给妈妈，她开心了好久。小班教学真的很好，老师能照顾到每个人。</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">陈</div>
+          <div>
+            <div class="testimonial-name">陈思婷</div>
+            <div class="testimonial-role">会计师 · 学员1年</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section class="contact-section" style="padding:120px 0;background:#0a0a0a;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="section-label">预约方式</div>
+      <div class="section-title">扫码添加微信，预约体验课</div>
+    </div>
+    <div class="contact-grid">
+      <div class="qr-wrap">
+        <img src="wechat-qr.png" alt="微信二维码" class="qr-img">
+        <div class="qr-label">Amber 针尖艺术</div>
+        <div class="qr-sub">扫一扫上面的二维码 · 添加微信</div>
+      </div>
+      <div class="contact-info">
+        <h3 class="contact-info-title">联系我们</h3>
         <div class="info-row">
-          <span class="info-icon">◉</span>
+          <span class="info-icon">📍</span>
           <div class="info-content">
             <strong>工作室地址</strong>
             Suite G3 / 25 Ryde Rd<br>Pymble NSW 2073
           </div>
         </div>
         <div class="info-row">
-          <span class="info-icon">◉</span>
+          <span class="info-icon">🕒</span>
           <div class="info-content">
             <strong>上课时间</strong>
             每周一 10:00 — 13:00<br>3 小时 / 节
           </div>
         </div>
         <div class="info-row">
-          <span class="info-icon">◉</span>
+          <span class="info-icon">💰</span>
           <div class="info-content">
             <strong>首次体验价</strong>
-            AUD $88 — 含全部材料、工具及烧制费用
+            AUD $88 · 含全部材料、工具及烧制费用
           </div>
         </div>
-        <a href="#" class="cta-btn">立即预约 $88</a>
       </div>
     </div>
   </div>
 </section>
 
-<footer><p>© 2026 陶瓷艺术 · CERAMIC ART STUDIO</p></footer>
+<!-- ==================== CTA ==================== -->
+<section class="cta">
+  <div class="cta-bg"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-label">开始你的旅程</div>
+    <div class="section-title">用色彩点亮瓷器<br>用双手创造美好</div>
+    <p>每周一上午 10:00-13:00 · 首次体验价 $88 · 材料烧制全包</p>
+    <a href="#" class="cta-btn">预约体验课 $88</a>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <p>© 2026 泥与火 · 釉上彩绘工作室 · 每周一 10:00-13:00</p>
+</footer>
 
 <script>
-// ==== HERO INK PARTICLES ====
-const c=document.getElementById('hc'),x=c.getContext('2d');let W,H;
-function R(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}
-R();window.addEventListener('resize',R);
-const P=[];
-for(let i=0;i<60;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:Math.random()*1.5+.3,a:Math.random()*.15+.05,col:Math.random()<.7?'31,27,26':'44,95,141'});
-let mx=-999,my=-999;
-window.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
-function D(){
-  x.clearRect(0,0,W,H);
-  P.forEach(p=>{const dx=mx-p.x,dy=my-p.y,d=Math.sqrt(dx*dx+dy*dy);if(d<140){p.vx+=dx*.00008;p.vy+=dy*.00008}p.x+=p.vx;p.y+=p.vy;p.vx*=.998;p.vy*=.998;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-  x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(${p.col},${p.a})`;x.fill()});
-  x.lineWidth=.4;
-  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y;if(Math.abs(dx)<70&&Math.abs(dy)<70){x.beginPath();x.moveTo(P[i].x,P[i].y);x.lineTo(P[j].x,P[j].y);x.strokeStyle=`rgba(31,27,26,${.04-Math.sqrt(dx*dx+dy*dy)/2000})`;x.stroke()}}
-  requestAnimationFrame(D)}
-D();
-
-// ==== HERO TEXT ====
-document.querySelectorAll('.hero-title span').forEach((s,i)=>{setTimeout(()=>{s.style.transition='all 1.2s cubic-bezier(.25,1,.5,1)';s.style.opacity='1';s.style.transform='none';s.style.filter='blur(0)'},600+i*180)});
-setTimeout(()=>{const e=document.querySelector('.hero-eyebrow');e.style.transition='opacity 1s';e.style.opacity='.9'},300);
-setTimeout(()=>{const e=document.querySelector('.hero-en');e.style.transition='opacity 1s';e.style.opacity='1'},1400);
-setTimeout(()=>document.getElementById('hdiv').classList.add('show'),1800);
-setTimeout(()=>{const e=document.querySelector('.hero-sub');e.style.transition='opacity 1s';e.style.opacity='1'},2200);
-
-// ==== SCROLL REVEAL ====
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');
-if(e.target.classList.contains('stat-val')&&e.target.dataset.t){const t=+e.target.dataset.t;let cu=0;const inc=t/45;const ti=setInterval(()=>{cu+=inc;if(cu>=t){cu=t;clearInterval(ti)}e.target.textContent=Math.round(cu)},30)}}})},{threshold:.12});
-document.querySelectorAll('.rv,.stat-val').forEach(el=>obs.observe(el));
-
-// ==== GALLERY DRAG ====
-const gt=document.getElementById('gtrack');let isD=false,sX,sL;
-gt.addEventListener('mousedown',e=>{isD=true;gt.style.cursor='grabbing';sX=e.pageX-gt.offsetLeft;sL=gt.scrollLeft});
-gt.addEventListener('mouseleave',()=>{isD=false;gt.style.cursor='grab'});
-gt.addEventListener('mouseup',()=>{isD=false;gt.style.cursor='grab'});
-gt.addEventListener('mousemove',e=>{if(!isD)return;e.preventDefault();gt.scrollLeft=sL-(e.pageX-gt.offsetLeft-sX)*1.5});
-
-// ==== GALLERY TABS ====
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
-    const cat=t.dataset.cat;
-    gt.classList.add('fading');
-    setTimeout(()=>{
-      document.querySelectorAll('.g-item').forEach(it=>{
-        if(cat==='all'||it.dataset.cat===cat)it.style.display='';else it.style.display='none';
-      });
-      gt.scrollLeft=0;
-      gt.classList.remove('fading');
-    },300);
-  });
+// ========================================
+// 1. CUSTOM CURSOR
+// ========================================
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursor-dot');
+let cx = 0, cy = 0, dx = 0, dy = 0;
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cursorDot.style.left = cx - 2.5 + 'px';
+  cursorDot.style.top = cy - 2.5 + 'px';
+});
+function animateCursor() {
+  dx += (cx - dx) * 0.15; dy += (cy - dy) * 0.15;
+  cursor.style.left = dx - 12 + 'px';
+  cursor.style.top = dy - 12 + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a, button, .course-card, .cta-btn, .artwork-item, .info-row').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
 });
 
-// ==== HERO PARALLAX ====
-window.addEventListener('scroll',()=>{const s=window.scrollY,h=document.querySelector('.hero-content'),sl=document.querySelector('.hero-seal');if(s<innerHeight){h.style.transform=`translateY(${s*.25}px)`;h.style.opacity=1-s/(innerHeight*.7);if(sl)sl.style.transform=`translateY(calc(-50% + ${s*.15}px)) rotate(${-12+s*.02}deg)`}},{passive:true});
+// ========================================
+// 2. CURSOR TRAIL
+// ========================================
+const trailCanvas = document.getElementById('trail-canvas');
+const trailCtx = trailCanvas.getContext('2d');
+let trails = [];
+function resizeTrail() {
+  trailCanvas.width = window.innerWidth;
+  trailCanvas.height = window.innerHeight;
+}
+resizeTrail();
+window.addEventListener('resize', resizeTrail);
+document.addEventListener('mousemove', e => {
+  for (let i = 0; i < 2; i++) {
+    trails.push({
+      x: e.clientX + (Math.random() - 0.5) * 8,
+      y: e.clientY + (Math.random() - 0.5) * 8,
+      r: Math.random() * 4 + 1,
+      alpha: 0.6,
+      color: ['#C4A882', '#D4956B', '#8B6F4E'][Math.floor(Math.random() * 3)]
+    });
+  }
+});
+function drawTrail() {
+  trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+  for (let i = trails.length - 1; i >= 0; i--) {
+    const t = trails[i];
+    t.alpha -= 0.012;
+    t.r *= 0.995;
+    if (t.alpha <= 0) { trails.splice(i, 1); continue; }
+    trailCtx.beginPath();
+    trailCtx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
+    trailCtx.fillStyle = t.color;
+    trailCtx.globalAlpha = t.alpha;
+    trailCtx.fill();
+  }
+  trailCtx.globalAlpha = 1;
+  requestAnimationFrame(drawTrail);
+}
+drawTrail();
+
+// ========================================
+// 3. PARTICLE HERO
+// ========================================
+const pCanvas = document.getElementById('particle-canvas');
+const pCtx = pCanvas.getContext('2d');
+let pw, ph, particles = [], mouse = { x: -1000, y: -1000 };
+function resizeParticles() {
+  pw = pCanvas.width = pCanvas.offsetWidth;
+  ph = pCanvas.height = pCanvas.offsetHeight;
+}
+resizeParticles();
+window.addEventListener('resize', resizeParticles);
+
+const pColors = ['#C4A882', '#D4956B', '#8B6F4E', '#E8D5B7', '#A0785A'];
+for (let i = 0; i < 100; i++) {
+  particles.push({
+    x: Math.random() * pw, y: Math.random() * ph,
+    vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2.5 + 0.5,
+    color: pColors[Math.floor(Math.random() * pColors.length)],
+    alpha: Math.random() * 0.5 + 0.2
+  });
+}
+
+document.querySelector('.hero').addEventListener('mousemove', e => {
+  const rect = pCanvas.getBoundingClientRect();
+  mouse.x = e.clientX - rect.left;
+  mouse.y = e.clientY - rect.top;
+});
+
+function drawParticles() {
+  pCtx.fillStyle = 'rgba(10,10,10,0.2)';
+  pCtx.fillRect(0, 0, pw, ph);
+  particles.forEach(p => {
+    const ddx = mouse.x - p.x, ddy = mouse.y - p.y;
+    const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+    if (dist < 150) { p.vx += ddx * 0.0002; p.vy += ddy * 0.0002; }
+    p.x += p.vx; p.y += p.vy;
+    p.vx *= 0.995; p.vy *= 0.995;
+    if (p.x < 0) p.x = pw; if (p.x > pw) p.x = 0;
+    if (p.y < 0) p.y = ph; if (p.y > ph) p.y = 0;
+    pCtx.beginPath();
+    pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    pCtx.fillStyle = p.color;
+    pCtx.globalAlpha = p.alpha;
+    pCtx.fill();
+  });
+  pCtx.globalAlpha = 0.06;
+  pCtx.strokeStyle = '#C4A882';
+  pCtx.lineWidth = 0.5;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const ddx = particles[i].x - particles[j].x, ddy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(ddx * ddx + ddy * ddy);
+      if (d < 100) {
+        pCtx.beginPath();
+        pCtx.moveTo(particles[i].x, particles[i].y);
+        pCtx.lineTo(particles[j].x, particles[j].y);
+        pCtx.stroke();
+      }
+    }
+  }
+  pCtx.globalAlpha = 1;
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ========================================
+// 4. HERO TEXT REVEAL
+// ========================================
+setTimeout(() => {
+  document.getElementById('hero-tagline').style.transition = 'opacity 1s ease';
+  document.getElementById('hero-tagline').style.opacity = '1';
+}, 300);
+setTimeout(() => {
+  document.querySelectorAll('.hero-title .char').forEach((c, i) => {
+    setTimeout(() => c.classList.add('visible'), i * 150);
+  });
+}, 800);
+setTimeout(() => {
+  document.getElementById('hero-sub').style.transition = 'opacity 1.2s ease';
+  document.getElementById('hero-sub').style.opacity = '1';
+}, 1800);
+
+// ========================================
+// 5. MORPHING BLOBS — removed (replaced by image)
+// ========================================
+
+// ========================================
+// 6. BLOB DIVIDER
+// ========================================
+let divT = 0;
+function animateDivider() {
+  divT += 0.008;
+  const w = 1440, h = 200;
+  let d = `M0,${h}`;
+  for (let x = 0; x <= w; x += 20) {
+    const y = 80 + Math.sin(x * 0.003 + divT) * 30 + Math.sin(x * 0.007 + divT * 1.5) * 15;
+    d += ` L${x},${y}`;
+  }
+  d += ` L${w},${h} Z`;
+  document.getElementById('divider-blob').setAttribute('d', d);
+  requestAnimationFrame(animateDivider);
+}
+animateDivider();
+
+// ========================================
+// 7. SCROLL ANIMATIONS (IntersectionObserver)
+// ========================================
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Counter animation for stats
+      if (entry.target.classList.contains('stat-number')) {
+        const target = parseInt(entry.target.dataset.target);
+        let current = 0;
+        const increment = target / 60;
+        const counter = setInterval(() => {
+          current += increment;
+          if (current >= target) { current = target; clearInterval(counter); }
+          entry.target.textContent = Math.round(current);
+        }, 25);
+      }
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.course-card, .timeline-item, .stat-number, .artwork-item').forEach(el => observer.observe(el));
+
+// ========================================
+// 8. PARALLAX ON MOUSE (for sections)
+// ========================================
+document.addEventListener('mousemove', e => {
+  const mx = (e.clientX / window.innerWidth - 0.5) * 2;
+  const my = (e.clientY / window.innerHeight - 0.5) * 2;
+  document.querySelectorAll('.testimonial-card').forEach((card, i) => {
+    const depth = (i + 1) * 3;
+    card.style.transform = `translate(${mx * depth}px, ${my * depth}px)`;
+  });
+});
 </script>
 </body>
 </html>
