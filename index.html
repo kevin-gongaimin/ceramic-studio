@@ -236,7 +236,7 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
         <div class="course-name">首次体验课</div>
         <div class="course-desc">零基础友好，专业老师手把手指导。体验釉上彩绘的魅力，完成你的第一件瓷器作品。材料、工具、烧制费用全包，拎包即来。</div>
         <div class="course-meta">
-          <span>3小时 · 周一 10:00-13:00</span>
+          <span>2.5小时 · 周一 9:30-12:00 或 13:30-16:00</span>
           <span class="course-price">$88</span>
         </div>
       </div>
@@ -245,7 +245,7 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
         <div class="course-name">常规彩绘课</div>
         <div class="course-desc">每周一节，持续精进。学习花鸟虫鱼、风景山水、人物肖像、卡通插画等丰富题材。专业老师指导构图、调色、笔法，逐步完成多次烧制的完整作品。</div>
         <div class="course-meta">
-          <span>3小时 · 周一 10:00-13:00</span>
+          <span>2.5小时 · 周一 9:30-12:00 或 13:30-16:00</span>
           <span class="course-price">$100<small style="font-size:12px;color:#8B6F4E;font-weight:400"> /节</small></span>
         </div>
       </div>
@@ -270,7 +270,7 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
   <div class="container">
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-number" data-target="3">0</div>
+        <div class="stat-number">2.5</div>
         <div class="stat-label">小时 / 每节课</div>
       </div>
       <div class="stat-card">
@@ -442,7 +442,7 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
           <span class="info-icon">🕒</span>
           <div class="info-content">
             <strong>上课时间</strong>
-            每周一 10:00 — 13:00<br>3 小时 / 节
+            每周一<br>上午 9:30 — 12:00<br>下午 13:30 — 16:00<br>2.5 小时 / 节
           </div>
         </div>
         <div class="info-row">
@@ -463,14 +463,14 @@ footer p{font-size:12px;color:#5a4a3a;letter-spacing:2px}
   <div class="container" style="position:relative;z-index:1">
     <div class="section-label">开始你的旅程</div>
     <div class="section-title">用色彩点亮瓷器<br>用双手创造美好</div>
-    <p>每周一上午 10:00-13:00 · 首次体验价 $88 · 材料烧制全包</p>
+    <p>每周一 9:30-12:00 / 13:30-16:00 · 首次体验价 $88 · 材料烧制全包</p>
     <a href="#" class="cta-btn">预约体验课 $88</a>
   </div>
 </section>
 
 <!-- ==================== FOOTER ==================== -->
 <footer>
-  <p>© 2026 泥与火 · 釉上彩绘工作室 · 每周一 10:00-13:00</p>
+  <p>© 2026 泥与火 · 釉上彩绘工作室 · 每周一上午/下午开课</p>
 </footer>
 
 <script>
@@ -652,7 +652,7 @@ const observer = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
       // Counter animation for stats
-      if (entry.target.classList.contains('stat-number')) {
+      if (entry.target.classList.contains('stat-number') && entry.target.dataset.target) {
         const target = parseInt(entry.target.dataset.target);
         let current = 0;
         const increment = target / 60;
